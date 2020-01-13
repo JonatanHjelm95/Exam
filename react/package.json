@@ -2,7 +2,7 @@
   "name": "eksamen",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8084/eksamen/",
+  "proxy": "https://jmhdat3.com/eksamen/",
   "homepage": "./",
   "dependencies": {
     "bootstrap": "^4.4.1",

@@ -34,7 +34,7 @@ const LoginForm = ({ login }) => {
     <div className="LoginForm">
       <form onSubmit={onSubmit} onChange={onChange}>
         <input placeholder="Brugernavn" id="username" />
-        <input placeholder="password" type="password" id="password" />
+        <input placeholder="Kodeord" type="password" id="password" />
         <button type="submit" className="login">
           Login
         </button>
@@ -53,10 +53,10 @@ const RegisterForm = ({ register }) => {
 
   const onSubmit = evt => {
     evt.preventDefault();
-    if (user.password == user.passwordConfirm) {
+    if (user.password == user.repeatPwd) {
       register(user.username, user.password, user.type);
     } else {
-      alert("Passwords didn't match");
+      alert("Passwords matchede ikke.");
     }
   };
 
@@ -73,13 +73,13 @@ const RegisterForm = ({ register }) => {
       <form onSubmit={onSubmit} onChange={onChange}>
         <input placeholder="Brugernavn" id="username" />
         <input placeholder="Kodeord" type="password" id="password" />
-        <input placeholder="Gentag kodeord" type="password" id="passwordConfirm" />
+        <input placeholder="Gentag kodeord" type="password" id="repeatPwd" />
         <select id="type">
           <option value="User">User</option>
           <option value="Admin">Admin</option>
         </select>
         <button type="submit" className="login">
-          Register
+          Opret bruger
         </button>
       </form>
     </div>
@@ -94,16 +94,16 @@ const UserInfo = ({ username, role, logout }) => {
 
   return (
     <div className="UserInfo">
-      <ul className="UserInfoList">
+      <ul>
         <li>
           <NavLink className="link" to="/user/123">
-            <FiUser className="modal-icon-white" /><span className="profileLabel">{username}</span>
+            <span>Profil {username}</span>
           </NavLink>
         </li>
         <li>
           <button onClick={onLogout} className="login">
-            <span>Logud</span>
-          </button>
+          <span>Logud</span>
+      </button>
         </li>
       </ul>
     </div>
@@ -133,7 +133,7 @@ const Login = props => {
       showLoginForm(false);
     }
     catch (error) {
-      alert("username or password wrong");
+      alert("username eller password forkert");
       setLoading(false);
     }
   };
@@ -149,7 +149,7 @@ const Login = props => {
       showLoginForm(false);
     }
     catch (error) {
-      alert("username is already in use");
+      alert("username allerede i brug.");
       setLoading(false);
     }
   }
@@ -186,12 +186,12 @@ const Login = props => {
         </Modal.Header>
         <Modal.Body>
           {loading ? (<div className="LoginForm"><Loader /></div>) : (formtype == 'Login') ?
-            (<div className="loginform"><LoginForm login={login} />
+            (<div><LoginForm login={login} />
               <button
+                className="register"
                 onClick={() => formtypechange('Opret Ny Bruger')}
-                className="registerBtn"
               >
-                <span>Not a user?</span>
+                <span>Ny Bruger</span>
               </button>
             </div>
             ) : (

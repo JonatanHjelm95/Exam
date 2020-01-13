@@ -33,26 +33,35 @@ import utils.EMF_Creator;
 public class RegisterEndpoint {
 
     public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
-    //private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory("pu", null, null, null, EMF_Creator.Strategy.CREATE);
+    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+    //private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory("pu", null, null, null, EMF_Creator.Strategy.CREATE);
     public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response register(String jsonString) throws AuthenticationException {
+    public Response Register(String jsonString) throws AuthenticationException {
+        JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
+        String username = json.get("username").getAsString();
+        String password = json.get("password").getAsString();
+        String userRole = json.get("userRole").getAsString();
         try {
-            JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
-            String username = json.get("username").getAsString();
-            String password = json.get("password").getAsString();
-            User user = USER_FACADE.registerUser(username, password, "user");
+
+            User user = USER_FACADE.registerUser(username, password, userRole);
+            String token = createToken(username, user.getRolesAsStrings());
+            String role = user.getRolesAsStrings().get(0);
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
+            responseJson.addProperty("token", token);
+            responseJson.addProperty("role", role);
             return Response.ok(new Gson().toJson(responseJson)).build();
-        } catch (Exception e) {
-            throw new AuthenticationException("Username already exists in database, try again");
+        } catch (Exception ex) {
+            if (ex instanceof AuthenticationException) {
+                throw new AuthenticationException("Username already in use. Please try again");
+            }
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        throw new AuthenticationException("Invalid username or password! Please try again");
     }
     //  @POST
     //  @Consumes(MediaType.APPLICATION_JSON)

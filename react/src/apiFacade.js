@@ -43,15 +43,15 @@ class ApiFacade {
         return json;
     }
 
-    register = async (user, pass) => {
-        const options = this.makeOptions("POST", false, { username: user, password: pass });
+    register = async (user, pass, type) => {
+        const options = this.makeOptions("POST", false, { username: user, password: pass, userRole: type });
         const res = await fetch("api/register", options)
         if (!res.ok) {
             return Promise.reject({ status: res.status, fullError: res.json() })
         }
-       
+        const json = await res.json();
         this.setToken(res.token)
-        return res.json();
+        return json;
     }
 
     CheckIfUser(list) {
