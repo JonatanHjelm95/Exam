@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import errorhandling.AuthenticationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Query;
 import utils.EMF_Creator;
 
 /**
@@ -67,16 +68,29 @@ public class UserFacade {
             em.getTransaction().begin();
             em.persist(user);
             em.getTransaction().commit();
-        
+
         } finally {
             em.close();
         }
         return user;
     }
+
+    public String getUserRole(String username) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT role_name from user_roles where user_name = ?");
+            q.setParameter(1, username);
+            return q.getSingleResult().toString();
+        } finally {
+            em.close();
+        }
+    }
+
     public static void main(String[] args) throws AuthenticationException {
         UserFacade uf = UserFacade.getUserFacade(EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE));
-        User user = uf.registerUser("bruger", "brugerpw", "user");
-        System.out.println(user.getUserName());
+        //User user = uf.registerUser("admin2", "adminpw", "admin");
+        String role = uf.getUserRole("admin2");
+        System.out.println(role);
     }
 
 }

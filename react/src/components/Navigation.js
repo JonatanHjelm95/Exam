@@ -1,10 +1,13 @@
 import React from 'react';
 import { FiSearch } from 'react-icons/fi';
-import { BrowserRouter as Router, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, NavLink, Switch, Route } from 'react-router-dom';
 import Login from './Login';
+import facade from '../apiFacade'
 import { ResultList } from './ResultList/ResultList';
 import { words } from '../global/suggestion-words';
 import './styles.scss';
+import Home from './Home'
+import Deliveries from './Deliveries'
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -12,14 +15,24 @@ class Navigation extends React.Component {
 
     this.state = {
       suggestions: [],
+      loggedIn: facade.loggedIn()
     };
 
     this.searchSuggestionsRef = React.createRef();
   }
 
   componentDidMount() {
+  this.intervalID = setInterval(
+    () => this.checkIfLoggedIn(),
+    1000
+  );
     document.addEventListener('keydown', this.pressedEscape, false);
     document.addEventListener('mousedown', this.clickOutside);
+  }
+  checkIfLoggedIn() {
+    this.setState({
+      loggedIn: facade.loggedIn()
+    });
   }
 
   componentWillUnmount() {
@@ -65,7 +78,7 @@ class Navigation extends React.Component {
   };
 
   render() {
-    const { suggestions } = this.state;
+    const { loggedIn } = this.state;
     return (
       <div>
         <Router>
@@ -74,51 +87,19 @@ class Navigation extends React.Component {
               <NavLink className="link" to="/" exact>
                 <span>HOME</span>
               </NavLink>
+              {loggedIn ? (<NavLink className="link" to="/deliveries">
+                <span>Deliveries</span>
+              </NavLink>) : (<p></p>)}
 
-              <NavLink className="link" to="/contact">
-                <span>LIVE LOG</span>
-              </NavLink>
-            </div>
-            <div className="container-search">
-              <form
-                className="form"
-                onSubmit={e => {
-                  this.exampleAdd(e);
-                }}
-              >
-                <FiSearch className="search-icon" />
-                <input
-                  ref={input => (this.newItem = input)}
-                  placeholder="Search here..."
-                  id="addButton"
-                  className="search"
-                  onChange={this.search}
-                />
-                {suggestions.length > 0 && (
-                  <div
-                    className="search-suggestion"
-                    ref={this.searchSuggestionsRef}
-                  >
-                    {suggestions.map(suggestion => (
-                      <div
-                        className="search-suggestion-item"
-                        onClick={() => this.clickSuggestionItem(suggestion)}
-                      >
-                        {suggestion}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </form>
             </div>
             <div className="container-login">
               <Login />
             </div>
           </div>
-          {/* <Switch>
+           <Switch>
             <Route path="/" exact component={Home} />
-            <Route path="/Contact" component={Contact} />
-          </Switch> */}
+            <Route path="/deliveries" component={Deliveries} />
+          </Switch> 
         </Router>
 
       </div>

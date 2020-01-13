@@ -55,13 +55,13 @@ class ApiFacade {
     }
 
     CheckIfUser(list) {
-        return fetch(URL + "/api/Example/user")
+        return fetch(URL + "/api/check/user")
             .then(function (response) {
                 return response.json();
             }).then(res => { list.unshift(res) })
     }
     CheckIfAdmin(list) {
-        return fetch(URL + "/api/Example/admin")
+        return fetch(URL + "/api/check/admin")
             .then(function (response) {
                 return response.json();
             }).then(res => { list.unshift(res) })

@@ -48,6 +48,7 @@ public class LoginEndpoint {
       String token = createToken(username, user.getRolesAsStrings());
       JsonObject responseJson = new JsonObject();
       responseJson.addProperty("username", username);
+      responseJson.addProperty("role", user.getRolesAsStrings().get(0));
       responseJson.addProperty("token", token);
       return Response.ok(new Gson().toJson(responseJson)).build();
 
@@ -68,7 +69,7 @@ public class LoginEndpoint {
       res.append(",");
     }
     String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
-    String issuer = "semesterstartcode-dat3";
+    String issuer = "jmhdat3.com";
 
     JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
     Date date = new Date();

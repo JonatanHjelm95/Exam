@@ -48,8 +48,8 @@ public class RegisterEndpoint {
         try {
 
             User user = USER_FACADE.registerUser(username, password, userRole);
-            String token = createToken(username, user.getRolesAsStrings());
-            String role = user.getRolesAsStrings().get(0);
+            String token = createToken(username, userRole);
+            String role = userRole;
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("username", username);
             responseJson.addProperty("token", token);
@@ -88,14 +88,14 @@ public class RegisterEndpoint {
     //  }
     //
 
-    private String createToken(String userName, List<String> roles) throws JOSEException {
+    private String createToken(String userName, String userRole) throws JOSEException {
 
-        StringBuilder res = new StringBuilder();
-        for (String string : roles) {
-            res.append(string);
-            res.append(",");
-        }
-        String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
+//        StringBuilder res = new StringBuilder();
+//        for (String string : roles) {
+//            res.append(string);
+//            res.append(",");
+//        }
+//        String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
         String issuer = "semesterstartcode-dat3";
 
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
@@ -103,7 +103,7 @@ public class RegisterEndpoint {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(userName)
                 .claim("username", userName)
-                .claim("roles", rolesAsString)
+                .claim("roles", userRole)
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
