@@ -29,7 +29,7 @@ public class DeliveryFacadeTest {
     public DeliveryFacadeTest() {
     }
 
-    //@BeforeAll
+    @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactory(
                 "pu",
