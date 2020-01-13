@@ -44,7 +44,7 @@ public class DeliveryEndpointTest {
         //emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.CREATE);
         emf = EMF_Creator.createEntityManagerFactory(
                 "pu",
-                "jdbc:mysql://167.172.161.49:3306/EKSAMEN_test",
+                "jdbc:mysql://localhost:3307/EKSAMEN_test",
                 "dev",
                 "ax2",
                 EMF_Creator.Strategy.CREATE);
