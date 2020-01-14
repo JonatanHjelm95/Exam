@@ -97,7 +97,7 @@ const UserInfo = ({ username, role, logout }) => {
       <ul>
         <li>
           <NavLink className="link" to="/user/123">
-            <span>Profil {username}</span>
+            <span id="username-attribute">{username}</span>
           </NavLink>
         </li>
         <li>
@@ -122,7 +122,7 @@ const Login = props => {
     facade.logout();
   };
 
-  const login = async (username, pass) => {
+  const login = async (username, pass, handler) => {
     try {
       setLoading(true);
       let user = await facade.login(username, pass)
@@ -135,7 +135,7 @@ const Login = props => {
     catch (error) {
       alert("username eller password forkert");
       setLoading(false);
-    }
+    }     
   };
 
   const register = async (username, pass, type) => {
@@ -186,7 +186,7 @@ const Login = props => {
         </Modal.Header>
         <Modal.Body>
           {loading ? (<div className="LoginForm"><Loader /></div>) : (formtype == 'Login') ?
-            (<div><LoginForm login={login} />
+            (<div><LoginForm login={login}/>
               <button
                 className="register"
                 onClick={() => formtypechange('Opret Ny Bruger')}

@@ -33,7 +33,7 @@ class ApiFacade {
         //     .then(handleHttpErrors) 
         //     .then(res => this.setToken(res.token))
         //     .then(res => res)
-        const res = await fetch("api/login", options)
+        const res = await fetch(URL +"/api/login", options)
         const json = await res.json();
         if (!res.ok) {
             throw { status: res.status, fullError: json }
@@ -45,12 +45,22 @@ class ApiFacade {
 
     register = async (user, pass, type) => {
         const options = this.makeOptions("POST", false, { username: user, password: pass, userRole: type });
-        const res = await fetch("api/register", options)
+        const res = await fetch(URL +"/api/register", options)
         if (!res.ok) {
             return Promise.reject({ status: res.status, fullError: res.json() })
         }
         const json = await res.json();
         this.setToken(res.token)
+        return json;
+    }
+
+    addDriver = async(name) => {
+        const options = this.makeOptions("POST", false, { name: name });
+        const res = await fetch(URL +"/api/driver/add", options)
+        if (!res.ok) {
+            return Promise.reject({ status: res.status, fullError: res.json() })
+        }
+        const json = await res.json();
         return json;
     }
 
@@ -70,13 +80,52 @@ class ApiFacade {
             return data
     }
 
-
-    CheckIfUser(list) {
-        return fetch(URL + "/api/check/user")
-            .then(function (response) {
-                return response.json();
-            }).then(res => { list.unshift(res) })
+    getDeliveries = async () => {
+        let data
+        await fetch(URL + "/api/deliveries/all")
+            .then(response => response.json())
+            .then((jsonData) => {
+                // jsonData is parsed json object received from url
+                data = jsonData
+            })
+            .catch((error) => {
+                // handle your errors here
+                console.error(error)
+            })
+            return data
     }
+
+    getDrivers = async () => {
+        let data
+        await fetch(URL + "/api/drivers/all")
+            .then(response => response.json())
+            .then((jsonData) => {
+                // jsonData is parsed json object received from url
+                data = jsonData
+            })
+            .catch((error) => {
+                // handle your errors here
+                console.error(error)
+            })
+            return data
+    }
+
+
+    CheckUserRole = async (username) => {
+        let data
+        await fetch(URL + "/api/check/"+username)
+            .then(response => response.json())
+            .then((jsonData) => {
+                // jsonData is parsed json object received from url
+                data = jsonData
+            })
+            .catch((error) => {
+                // handle your errors here
+                console.error(error)
+            })
+            return data
+    }
+
     CheckIfAdmin(list) {
         return fetch(URL + "/api/check/admin")
             .then(function (response) {

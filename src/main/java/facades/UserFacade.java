@@ -89,8 +89,8 @@ public class UserFacade {
     public static void main(String[] args) throws AuthenticationException {
         UserFacade uf = UserFacade.getUserFacade(EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE));
         //User user = uf.registerUser("admin2", "adminpw", "admin");
-        String role = uf.getUserRole("admin2");
-        System.out.println(role);
+        //String role = uf.getUserRole("admin2");
+        //System.out.println(role);
     }
 
 }

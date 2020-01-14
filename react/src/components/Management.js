@@ -1,8 +1,8 @@
 import React from 'react';
 import facade from '../apiFacade'
-import DeliveryTable from './DeliveryTable';
+import TruckTable from './TruckTable';
 
-class Deliveries extends React.Component {
+class Management extends React.Component {
 
     constructor(props) {
         super(props);
@@ -13,12 +13,19 @@ class Deliveries extends React.Component {
 
     }
     componentDidMount() {
+        this.getData()
     }
 
+    async getData() {
+        let trucks = await facade.getTrucks()
+        this.setState({
+            trucks: trucks
+        })
+    }
 
     render() {
             return (
-                <DeliveryTable />
+                <TruckTable />
             )
         
 
@@ -26,4 +33,4 @@ class Deliveries extends React.Component {
 
 }
 
-export default Deliveries;
+export default Management;
