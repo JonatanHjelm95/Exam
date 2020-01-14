@@ -1,22 +1,47 @@
 import React from 'react';
 import facade from '../apiFacade'
-const Deliveries = () => {
-    const onClick = () => {
-        console.log(facade.getToken())
-        /* if (tokenSplit[1] === "eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoidXNlciIsImV4cCI6MTU3ODk1MzUwMywiaWF0IjoxNTc4OTUxNzAzLCJpc3N1ZXIiOiJzZW1lc3RlcnN0YXJ0Y29kZS1kYXQzIiwidXNlcm5hbWUiOiJhZG1pbiJ9"){
-            console.log("admin");
-        }
-        if (tokenSplit[1] === "eyJzdWIiOiJicnVnZXIiLCJyb2xlcyI6InVzZXIiLCJleHAiOjE1Nzg5NTM1MzAsImlhdCI6MTU3ODk1MTczMCwiaXNzdWVyIjoic2VtZXN0ZXJzdGFydGNvZGUtZGF0MyIsInVzZXJuYW1lIjoiYnJ1Z2VyIn0" ){
-            console.log("user");
-        } */
+
+class Deliveries extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            trucks: [],
+            truckCapacity: '',
+        };
+
     }
-    return (
-        <div>
-            <button onClick={onClick}>hej</button>
-            <p>
-                Deliveries</p>
-        </div>
-    );
+    componentDidMount() {
+        this.getData()
+    }
+
+    async getData() {
+        let trucks = await facade.getTrucks()
+        this.setState({
+            trucks: trucks
+        })
+        console.log(this.state.trucks)
+    }
+
+    render() {
+        if (this.state.trucks && this.state.trucks.length > 0) {
+            return (
+                <div>
+                    <table>
+                        <tr><th>name</th><th>capacity</th><th>status</th></tr>
+                        {
+                            this.state.trucks.map((items =>
+                                <tr><td>{items.name}</td><td>{items.capacity}</td><td>{items.deliveries ? (<p>Available</p>) : (<p>On duty</p>)}</td></tr>
+                            ))
+                        }
+                    </table>
+                </div>
+            );
+        }
+
+        return null;
+    }
+
 }
 
 export default Deliveries;

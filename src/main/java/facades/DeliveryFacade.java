@@ -105,6 +105,7 @@ public class DeliveryFacade {
         }
 
     }
+
     public List getAllCargo() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -175,12 +176,12 @@ public class DeliveryFacade {
         }
         return t;
     }
-    
+
     public Driver updateDriver(Driver driver, long id) {
         EntityManager em = emf.createEntityManager();
         Driver d = em.find(Driver.class, id);
         try {
-            em.getTransaction().begin();           
+            em.getTransaction().begin();
             d.setName(driver.getName());
             em.getTransaction().commit();
         } finally {
@@ -188,12 +189,12 @@ public class DeliveryFacade {
         }
         return d;
     }
-    
+
     public Cargo updateCargo(Cargo cargo, long id) {
         EntityManager em = emf.createEntityManager();
         Cargo c = em.find(Cargo.class, id);
         try {
-            em.getTransaction().begin();           
+            em.getTransaction().begin();
             c.setName(cargo.getName());
             c.setWeight(cargo.getWeight());
             c.setUnits(cargo.getUnits());
@@ -203,19 +204,19 @@ public class DeliveryFacade {
         }
         return c;
     }
-    
+
     public Delivery updateDelivery(Delivery delivery, long id, List<Cargo> cargos, Truck truck, Driver driver) {
         EntityManager em = emf.createEntityManager();
         Delivery d = em.find(Delivery.class, id);
         try {
-            em.getTransaction().begin();           
+            em.getTransaction().begin();
             d.setShippingDate(delivery.getShippingDate());
             d.setFromLocation(delivery.getFromLocation());
             d.setDestination(delivery.getDestination());
-            if(cargos != null){
+            if (cargos != null) {
                 d.setCargos(cargos);
             }
-            if(truck != null){
+            if (truck != null) {
                 d.setTruck(truck);
             }
             em.getTransaction().commit();
@@ -224,7 +225,6 @@ public class DeliveryFacade {
         }
         return d;
     }
-
 
     public void deleteTruck(long id) {
         EntityManager em = emf.createEntityManager();
@@ -239,8 +239,6 @@ public class DeliveryFacade {
             em.close();
         }
     }
-        
-    
 
     public void deleteDriver(long id) {
         EntityManager em = emf.createEntityManager();
@@ -269,7 +267,7 @@ public class DeliveryFacade {
             em.close();
         }
     }
-    
+
     public void deleteDelivery(long id) {
         EntityManager em = emf.createEntityManager();
         Delivery d = em.find(Delivery.class, id);
@@ -283,7 +281,6 @@ public class DeliveryFacade {
             em.close();
         }
     }
-    
 
 //    public void removeFKConstraints() {
 //        EntityManager em = emf.createEntityManager();
@@ -306,7 +303,6 @@ public class DeliveryFacade {
 //            em.close();
 //        }
 //    }
-
     public Cargo addCargoToDB(Cargo cargo) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -345,18 +341,21 @@ public class DeliveryFacade {
     public String addDelivery(Delivery delivery, Driver driver, Truck truck, List<Cargo> cargos) {
         EntityManager em = emf.createEntityManager();
 
-        driver.addTruck(truck);
+        //driver.addTruck(truck);
         //truck.addDriver(driver);
         delivery.addCargo(cargos);
-        delivery.addTruck(truck);
+        //delivery.addTruck(truck);
 
-        List<Delivery> deliveries = new ArrayList();
-        deliveries.add(delivery);
-        truck.addDeliveries(deliveries);
+        //List<Delivery> deliveries = new ArrayList();
+        //deliveries.add(delivery);
+        //truck.addDeliveries(deliveries);
 
+        Driver d = em.find(Driver.class, driver.getId());
+        Truck t = em.find(Truck.class, truck.getId());
+        
         try {
             em.getTransaction().begin();
-            
+            d.setTruck(t);
             em.persist(delivery);
 
             em.getTransaction().commit();

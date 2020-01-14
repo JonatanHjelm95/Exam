@@ -39,7 +39,7 @@ class ApiFacade {
             throw { status: res.status, fullError: json }
         }
         this.setToken(json.token)
-        sessionStorage.setItem("user", JSON.stringify({ Username: json.username}));
+        sessionStorage.setItem("user", JSON.stringify({ Username: json.username }));
         return json;
     }
 
@@ -53,6 +53,23 @@ class ApiFacade {
         this.setToken(res.token)
         return json;
     }
+
+
+    getTrucks = async () => {
+        let data
+        await fetch(URL + "/api/trucks/all")
+            .then(response => response.json())
+            .then((jsonData) => {
+                // jsonData is parsed json object received from url
+                data = jsonData
+            })
+            .catch((error) => {
+                // handle your errors here
+                console.error(error)
+            })
+            return data
+    }
+
 
     CheckIfUser(list) {
         return fetch(URL + "/api/check/user")
